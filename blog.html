@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | MFM Guitar Choir</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0A1628;
+            --navy-light: #1a2847;
+            --pink: #D946EF;
+            --pink-light: #E879F9;
+            --white: #FFFFFF;
+            --gray-light: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--navy);
+            line-height: 1.6;
+            background: var(--gray-light);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(217, 70, 239, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .logo-text span {
+            color: var(--pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--pink);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .blog-hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .blog-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Blog Container */
+        .blog-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 0.8rem 1.5rem;
+            background: var(--white);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .filter-tab:hover {
+            border-color: var(--pink);
+            transform: translateY(-2px);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--pink) 0%, var(--pink-light) 100%);
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(217, 70, 239, 0.3);
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(217, 70, 239, 0.2);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--pink) 100%);
+        }
+
+        .blog-content {
+            padding: 2rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .blog-category {
+            padding: 0.3rem 1rem;
+            background: rgba(217, 70, 239, 0.1);
+            color: var(--pink);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .blog-date {
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--navy);
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: #64748B;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            color: var(--pink);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s;
+        }
+
+        .read-more:hover {
+            gap: 1rem;
+        }
+
+        /* No Posts Message */
+        .no-posts {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748B;
+        }
+
+        .no-posts h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--navy);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .blog-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-text">MFM <span>Guitar Choir</span></div>
+            </a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#music">Music</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="blog.html" style="color: var(--pink);">Blog</a></li>
+                <li><a href="index.html#connect">Connect</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="blog-hero">
+        <h1>Our Blog</h1>
+        <p>Stories, testimonies, and updates from the MFM Guitar Choir ministry</p>
+    </section>
+
+    <!-- Blog Container -->
+    <div class="blog-container">
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-category="all">All Posts</button>
+            <button class="filter-tab" data-category="testimonies">Testimonies</button>
+            <button class="filter-tab" data-category="events">Events</button>
+            <button class="filter-tab" data-category="music">Music Releases</button>
+            <button class="filter-tab" data-category="worship">Worship & Prayer</button>
+            <button class="filter-tab" data-category="announcements">Announcements</button>
+        </div>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid" id="blogGrid">
+            <!-- Blog posts will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><strong>MFM Guitar Choir</strong></p>
+            <p>Mountain of Fire and Miracles Ministries</p>
+            <p>Established September 3rd, 2006 | MFM International Headquarters, Lagos, Nigeria</p>
+            <p style="margin-top: 2rem; font-size: 0.9rem;">© 2025 MFM Guitar Choir. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        // Load blog posts from storage
+        async function loadBlogPosts(category = 'all') {
+            const blogGrid = document.getElementById('blogGrid');
+            
+            try {
+                const result = await window.storage.list('blog:', true);
+                
+                if (!result || !result.keys || result.keys.length === 0) {
+                    blogGrid.innerHTML = `
+                        <div class="no-posts" style="grid-column: 1/-1;">
+                            <h3>No blog posts yet</h3>
+                            <p>Check back soon for updates from our ministry!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const posts = [];
+                for (const key of result.keys) {
+                    try {
+                        const postData = await window.storage.get(key, true);
+                        if (postData && postData.value) {
+                            const post = JSON.parse(postData.value);
+                            posts.push(post);
+                        }
+                    } catch (err) {
+                        console.log('Skipping invalid post:', key);
+                    }
+                }
+
+                // Sort by date (newest first)
+                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Filter by category
+                const filteredPosts = category === 'all' 
+                    ? posts 
+                    : posts.filter(post => post.category === category);
+
+                if (filteredPosts.length === 0) {
+                    blogGrid.innerHTML = `
+                        <div class="no-posts" style="grid-column: 1/-1;">
+                            <h3>No posts in this category</h3>
+                            <p>Try selecting a different category</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                blogGrid.innerHTML = filteredPosts.map(post => `
+                    <div class="blog-card" onclick="viewPost('${post.id}')">
+                        <img src="${post.image || 'https://via.placeholder.com/400x250/0A1628/D946EF?text=MFM+Guitar+Choir'}" 
+                             alt="${post.title}" class="blog-image" 
+                             onerror="this.src='https://via.placeholder.com/400x250/0A1628/D946EF?text=MFM+Guitar+Choir'">
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span class="blog-category">${post.category}</span>
+                                <span class="blog-date">${formatDate(post.date)}</span>
+                            </div>
+                            <h3 class="blog-title">${post.title}</h3>
+                            <p class="blog-excerpt">${post.excerpt}</p>
+                            <a href="#" class="read-more" onclick="event.stopPropagation(); viewPost('${post.id}')">
+                                Read More →
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                blogGrid.innerHTML = `
+                    <div class="no-posts" style="grid-column: 1/-1;">
+                        <h3>No blog posts yet</h3>
+                        <p>Check back soon for updates from our ministry!</p>
+                    </div>
+                `;
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function viewPost(postId) {
+            window.location.href = `blog-post.html?id=${postId}`;
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                loadBlogPosts(tab.dataset.category);
+            });
+        });
+
+        // Load posts on page load
+        loadBlogPosts();
+    </script>
+</body>
+</html>

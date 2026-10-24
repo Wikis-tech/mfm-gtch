@@ -1,0 +1,1235 @@
+<?php
+session_start();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFM Guitar Choir | Spirit-Filled Worship Ministry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0A1628;
+            --navy-light: #1a2847;
+            --pink: #D946EF;
+            --pink-light: #E879F9;
+            --white: #FFFFFF;
+            --gray-light: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--navy);
+            line-height: 1.6;
+            overflow-x: hidden;
+             }
+
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 22, 40, 0.35);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(217, 70, 239, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .logo-text span {
+            color: var(--pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--pink);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--white);
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.85) 0%, rgba(26, 40, 71, 0.45) 50%, rgba(217, 70, 239, 0.3) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--white);
+            max-width: 900px;
+            padding: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--pink) 0%, var(--pink-light) 100%);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(217, 70, 239, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(217, 70, 239, 0.5);
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--pink);
+            width: 40px;
+            border-radius: 10px;
+        }
+
+        /* About Section */
+        .about-section {
+            background: var(--white);
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            color: var(--pink);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748B;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            padding: 2.5rem;
+            background: var(--gray-light);
+            border-radius: 20px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--pink);
+            box-shadow: 0 20px 40px rgba(217, 70, 239, 0.15);
+        }
+
+        .about-card h3 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .about-card p {
+            color: #64748B;
+        }
+
+        /* Milestones Section */
+        .milestones-section {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            padding: 6rem 2rem;
+            color: var(--white);
+        }
+
+        .timeline {
+            max-width: 900px;
+            margin: 3rem auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--pink) 0%, rgba(217, 70, 239, 0.3) 100%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 0 2rem;
+            border: 1px solid rgba(217, 70, 239, 0.2);
+        }
+
+        .timeline-year {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--pink);
+            border-radius: 50%;
+            border: 4px solid var(--navy);
+            z-index: 10;
+        }
+
+        /* Leadership Section */
+        .leadership-section {
+            background: var(--white);
+            padding: 6rem 2rem;
+        }
+
+        .leader-card {
+            max-width: 600px;
+            margin: 3rem auto;
+            text-align: center;
+            padding: 3rem;
+            background: var(--gray-light);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(10, 22, 40, 0.1);
+        }
+
+        .leader-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: url('/images/Dr\ Joseph\ Olubukola.jpg') center/cover no-repeat;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--white);
+        }
+
+        .leader-card h3 {
+            font-size: 2rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .leader-card .title {
+            color: var(--pink);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Music Section */
+        .music-section {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            padding: 6rem 2rem;
+            color: var(--white);
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .music-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(217, 70, 239, 0.2);
+            transition: all 0.3s;
+        }
+
+        .music-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--pink);
+            box-shadow: 0 15px 40px rgba(217, 70, 239, 0.3);
+        }
+
+        .music-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .music-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        /* Songs List Styles */
+.songs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.song-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(217, 70, 239, 0.2);
+    transition: all 0.4s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.song-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(217, 70, 239, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.song-card:hover::before {
+    left: 100%;
+}
+
+.song-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--pink);
+    box-shadow: 0 20px 50px rgba(217, 70, 239, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.song-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.song-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.song-info {
+    flex: 1;
+}
+
+.song-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+}
+
+.song-year {
+    color: var(--pink-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.song-type {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(217, 70, 239, 0.2);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--pink-light);
+    margin-top: 0.5rem;
+}
+
+.song-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.song-card:hover .song-details {
+    max-height: 200px;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(217, 70, 239, 0.2);
+}
+
+.song-platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+
+.platform-badge {
+    padding: 0.2rem 0.6rem;
+    background: rgba(217, 70, 239, 0.15);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.song-features {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.song-card.hidden {
+    display: none;
+}
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--white);
+            padding: 6rem 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .social-card {
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 20px;
+            text-align: center;
+            min-width: 150px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--navy);
+            border: 2px solid transparent;
+        }
+
+        .social-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--pink);
+            box-shadow: 0 15px 40px rgba(217, 70, 239, 0.2);
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            object-fit: contain;
+        }
+
+        .social-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--navy);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+            }
+
+            .timeline-content {
+                margin-left: 60px;
+                margin-right: 0;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        /* Pop-up Ad Styles */
+        .popup-ad-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .popup-ad-overlay.active {
+            display: flex;
+        }
+
+        .popup-ad-content {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-ad-inner {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .popup-ad-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .popup-ad-close:hover {
+            background: var(--pink);
+            transform: rotate(90deg);
+        }
+
+        .popup-ad-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .popup-ad-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .popup-ad-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .popup-ad-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.85;
+        }
+
+        .popup-ad-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--pink);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(217, 70, 239, 0.3);
+        }
+
+        .popup-ad-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(217, 70, 239, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .popup-ad-content {
+                max-width: 95%;
+            }
+
+            .popup-ad-title {
+                font-size: 1.5rem;
+            }
+
+            .popup-ad-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Pop-up Ad -->
+    <div class="popup-ad-overlay" id="popupAd">
+        <div class="popup-ad-content" id="popupAdContent">
+            <button class="popup-ad-close" onclick="closePopupAd()">×</button>
+            <div class="popup-ad-inner" id="popupAdInner">
+                <!-- Ad content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="/images/logo.png" alt="MFM Guitar Choir Logo" class="logo-img">
+                <div class="logo-text">MFM <span>Guitar Choir</span></div>
+            </a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#milestones">Milestones</a></li>
+                <li><a href="#leadership">Leadership</a></li>
+                <li><a href="#music">Music</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="#connect">Connect</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Slider -->
+    <section id="home" class="hero-slider">
+        <div class="slide active" style="background: url('/images/MFM\ GTCH\ 11.jpg') center/cover no-repeat;">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>Spirit-Filled Worship Ministry</h1>
+                    <p>Advancing the vision of MFM through disciplined, guitar-led worship that ministers deliverance, revival, and spiritual upliftment</p>
+                    <a href="#about" class="cta-button">Discover Our Story</a>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background: url('/images/MFM\ GTCH\ 111.jpg') center/cover no-repeat;">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>Established Since 2006</h1>
+                    <p>Over 19 years of consistent ministry, worship excellence, and spiritual impact at MFM International Headquarters</p>
+                    <a href="#milestones" class="cta-button">View Our Journey</a>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background: url('/images/MFM\ GTCH\ 1111.jpg') center/cover no-repeat;">
+            <div class="slide-overlay">
+                <div class="hero-content">
+                    <h1>Music That Transforms</h1>
+                    <p>Using guitars and string instruments alongside choral singing to create powerful worship experiences</p>
+                    <a href="#music" class="cta-button">Listen Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="slider-dots">
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Who We Are</div>
+                <h2>About MFM Guitar Choir</h2>
+                <p>An officially recognized music ministry under Mountain of Fire and Miracles Ministries, dedicated to spirit-filled worship and evangelism</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Our Vision</h3>
+                    <p>To glorify God and advance the vision of MFM through disciplined, guitar-led worship that ministers deliverance, revival, and spiritual upliftment.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Our Mission</h3>
+                    <p>Supporting church services and MFM programs through inspired music ministry, evangelism, and training members in line with MFM standards.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Our Impact</h3>
+                    <p>Lagos Choir Awards winner (2020), with over a decade of consistent ministry and representation of MFM in local and international platforms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Milestones Section -->
+    <section id="milestones" class="milestones-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag" style="color: var(--pink-light);">Our Journey</div>
+                <h2 style="color: var(--white);">Key Milestones</h2>
+                <p style="color: rgba(255,255,255,0.8);">Celebrating God's faithfulness through the years</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2006</div>
+                        <p>Formal establishment of the MFM Guitar Choir at MFM International Headquarters, Lagos, Nigeria on September 3rd</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2018</div>
+                        <p>Celebrated 12th Anniversary milestone with testimonies of growth and spiritual impact</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2020</div>
+                        <p>Winner of the prestigious Lagos Choir Awards, recognizing excellence in worship ministry</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2023</div>
+                        <p>Celebrated 17th Anniversary with expanded ministry reach and impact</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2025</div>
+                        <p>Celebrating 19 years of faithful service and spirit-filled ministry</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Section -->
+    <section id="leadership" class="leadership-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Leadership</div>
+                <h2>Our Conductor</h2>
+                <p>Dedicated spiritual and musical leadership guiding the ministry</p>
+            </div>
+            <div class="leader-card">
+                <div class="leader-photo">
+                </div>
+                <h3>Dr. Joseph Olubukola</h3>
+                <div class="title">Lead Coordinator / Conductor</div>
+                <p>Under the guidance of Dr. Joseph Olubukola, the MFM Guitar Choir continues to flourish in musical excellence and spiritual depth, operating under the MFM Music Ministry Department.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Music Section -->
+<section id="music" class="music-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag" style="color: var(--pink-light);">Our Music</div>
+            <h2 style="color: var(--white);">Worship Releases</h2>
+            <p style="color: rgba(255,255,255,0.8);">Spirit-filled songs for ministry and edification</p>
+        </div>
+        
+        <div class="songs-list">
+            <!-- Songs will be populated here by JavaScript -->
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button id="showMoreBtn" class="cta-button">Show All Songs</button>
+        </div>
+    </div>
+</section>
+
+    <!-- Contact Section -->
+    <section id="connect" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Connect With Us</div>
+                <h2>Stay Connected</h2>
+                <p>Follow our journey and stream our music on various platforms</p>
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/mfm_guitarchoir/" target="_blank" class="social-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/600px-Instagram_icon.png" alt="Instagram" class="social-icon" alt="Instagram" class="social-icon">
+                    <h4>Instagram</h4>
+                    <p>@mfm_guitarchoir</p>
+                </a>
+                <a href="https://www.facebook.com/guitarchoir/" target="_blank" class="social-card">
+                    <img src="https://cdn.cdnlogo.com/logos/f/83/facebook.svg" alt="Facebook" class="social-icon">
+                    <h4>Facebook</h4>
+                    <p>guitarchoir</p>
+                </a>
+                <a href="https://www.youtube.com/channel/UCfzWfVg-545uhAlmGNMFmQQ" target="_blank" class="social-card">
+                    <img src="https://cdn.cdnlogo.com/logos/y/57/youtube-icon.svg" alt="YouTube" class="social-icon">
+                    <h4>YouTube</h4>
+                    <p>Watch Live</p>
+                </a>
+                <a href="https://audiomack.com/mfmguitarchoir" target="_blank" class="social-card">
+                    <img src="https://cdn.simpleicons.org/audiomack/ffa200" alt="Audiomack" class="social-icon">
+                    <h4>Audiomack</h4>
+                    <p>Stream Music</p>
+                </a>
+                <a href="https://soundcloud.com/mfmguitarchoir" target="_blank" class="social-card">
+                    <img src="https://cdn.simpleicons.org/soundcloud/ff5500" alt="SoundCloud" class="social-icon">
+                    <h4>SoundCloud</h4>
+                    <p>Listen Now</p>
+                </a>
+                <a href="https://open.spotify.com/artist/21Ubrz2seNraUCL6dOmola" class="social-card">
+                    <img src="https://logo.svgcdn.com/l/spotify-icon.png" alt="spotify" class="social-icon">
+                    <h4>Spotify</h4>
+                    <p>Follow Us</p>
+                    
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><strong>MFM Guitar Choir</strong></p>
+            <p>Mountain of Fire and Miracles Ministries</p>
+            <p>Established September 3rd, 2006 | MFM International Headquarters, Lagos, Nigeria</p>
+            <p style="margin-top: 2rem; font-size: 0.9rem;">© 2025 MFM Guitar Choir. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        
+        // Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let slideInterval;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function goToSlide(n) {
+            clearInterval(slideInterval);
+            showSlide(n);
+            startSlideshow();
+        }
+
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 7000);
+        }
+
+        startSlideshow();
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    document.querySelector('.nav-links').classList.remove('active');
+                }
+            });
+        });
+
+
+        // Songs Database
+const songsDatabase = [
+    // Latest Singles 2025
+    { title: "Great Faith (Live)", year: 2025, type: "Single", icon: "", platforms: ["Apple Music", "Spotify", "YouTube"], description: "Theme song for the 19th Anniversary celebration, capturing the essence of faith and worship." },
+    { title: "VANITY", year: 2025, type: "Single", icon: "", platforms: ["Apple Music", "Spotify"], description: "A powerful reflection on life's temporal nature and eternal values." },
+    
+    // I Believe Album (2024)
+    { title: "I Believe", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Title track expressing unwavering faith in God's promises and power." },
+    { title: "Deliverance We Pray", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "A heartfelt prayer song seeking God's deliverance and intervention." },
+    { title: "By The Rivers Of Babylon", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", features: "Vincent Edeigba", description: "A soulful rendition of the classic psalm with contemporary worship arrangements." },
+    { title: "Omeriwo", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", features: "Temitope Abraham", description: "Indigenous worship celebrating God's goodness in native expression." },
+    { title: "You Showed Me Your Mercy", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Thanksgiving anthem acknowledging God's merciful interventions." },
+    { title: "Hakuna Mungu", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Swahili praise declaring there is no God like our God." },
+    { title: "Try Your Best", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Victorious declaration of faith against opposition and challenges." },
+    { title: "All I Want Is Joy", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Uplifting song expressing desire for divine joy and peace." },
+    { title: "Anointing Fall", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", features: "Opeyemi Akinol", description: "Powerful prayer for fresh anointing and Holy Spirit outpouring." },
+    { title: "Sweet Jesus", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Intimate worship expressing love and devotion to Jesus Christ." },
+    { title: "Ha Hu (Instrumental)", year: 2024, type: "Instrumental", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Instrumental piece showcasing the choir's musical excellence." },
+    { title: "Jehovah You Are The God", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], album: "I Believe", description: "Majestic worship acknowledging the sovereignty of Jehovah." },
+    
+    // Thank You Album (2024)
+    { title: "Se Rere", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", description: "Yoruba thanksgiving song celebrating God's goodness and faithfulness." },
+    { title: "Oba Fi So Be", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", description: "Declarative praise affirming God's sovereign power and authority." },
+    { title: "Zo Mu Ya Beshi", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Emmanuel Ayodele", description: "Dynamic worship in indigenous language expressing complete surrender." },
+    { title: "Oyikiase", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Faith Osigwe", description: "Melodious praise celebrating miraculous interventions." },
+    { title: "Kobiruo", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Kehinde Adeyemo & Napoleon Gospel", description: "High-energy praise track with powerful guitar arrangements." },
+    { title: "Nor Abasi", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Napoleon Gospel", description: "Cross-cultural worship uniting different Nigerian expressions of praise." },
+    { title: "Onye Oma", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Temitope Abraham", description: "Igbo worship declaring God as the ultimate good one." },
+    { title: "Higher Higher", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", description: "Aspirational worship seeking elevation and spiritual ascension." },
+    { title: "Power Must Change Hands", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", features: "Kehinde Adeyemo", description: "Warfare anthem declaring divine intervention and power transfer." },
+    { title: "So Ra Fese", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", description: "Jubilant celebration of God's mighty deeds and victories." },
+    { title: "O Ti Se O", year: 2024, type: "Album Track", icon: "", platforms: ["Apple Music", "Spotify"], album: "Thank You (Nigerian Songs)", description: "Thanksgiving declaration acknowledging answered prayers." },
+    
+    // Ariwo Ayo EP (2024)
+    { title: "Ariwo Ayo", year: 2024, type: "EP Title Track", icon: "", platforms: ["Apple Music", "Spotify"], description: "Joyful noise unto the Lord - a collection of jubilant praise songs." },
+    
+    // Other 2024 Singles
+    { title: "Egberun Ahon", year: 2024, type: "Single", icon: "", platforms: ["Multiple"], description: "Popular worship track meaning 'Thousand Tongues' - celebrating multilingual praise." },
+    { title: "Oghene Woruna", year: 2024, type: "Single", icon: "", platforms: ["Multiple"], features: "Kehinde Adeyemo", description: "Powerful Urhobo praise celebrating God's greatness and majesty." },
+    { title: "Going Greater", year: 2024, type: "Single", icon: "", platforms: ["Multiple"], description: "Prophetic declaration of continuous spiritual and natural progress." },
+    { title: "Gba A", year: 2024, type: "Single", icon: "", platforms: ["Spotify (1000+ streams)"], description: "Yoruba prayer song meaning 'Receive It' - claiming divine blessings." },
+    
+    // Grateful Album (2023)
+    { title: "Grateful", year: 2023, type: "Album", icon: "", platforms: ["Apple Music", "Spotify", "Deezer"], description: "Comprehensive worship medleys expressing gratitude for God's faithfulness." },
+    
+    // 2023 Singles
+    { title: "Gbo Adura", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Prayer song meaning 'Hear Our Prayer' - seeking divine attention." },
+    { title: "Fire Come Down", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Intense prayer for Holy Spirit fire and revival manifestation." },
+    { title: "I Am A Winner", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Victory declaration affirming identity as more than conquerors." },
+    { title: "Lion of Judah", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Majestic worship celebrating Christ's power and kingship." },
+    { title: "Adura Mo Ti Gba", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Testimony song declaring 'My Prayer Has Been Answered'." },
+    { title: "Adura Mo Ti Gba (Deluxe)", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Enhanced version with additional arrangements and testimonies." },
+    { title: "Instruments of Praises", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Anthem composed in 2010, officially released 2023 - celebrating musical worship." },
+    { title: "Revival", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Passionate cry for spiritual awakening and church renewal." },
+    { title: "New Song", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Fresh anointing and inspiration - prophetic worship expression." },
+    { title: "Praise To My Jesus", year: 2023, type: "Single", icon: "", platforms: ["Multiple"], description: "Worship song with special children's version for family ministry." },
+    
+    // Miscellaneous & Feature Tracks
+    { title: "Evil Rage", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Spiritual warfare anthem declaring victory over evil forces." },
+    { title: "Mo Ti Ko", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Testimony song expressing gratitude for divine gathering." },
+    { title: "For All Have Sinned", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Evangelistic message acknowledging universal need for salvation." },
+    { title: "Fight a Good Fight of Faith", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Encouraging anthem based on Pauline exhortation to Timothy." },
+    { title: "Oruko Jesu", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Powerful worship on the name of Jesus and its authority." },
+    { title: "My God is Good", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Simple yet profound declaration of God's consistent goodness." },
+    { title: "A New Song in My Heart", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Intimate worship expressing joy and renewal in the spirit." },
+    { title: "Have Your Way", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Surrender song yielding completely to God's perfect will." },
+    { title: "Sacrifices of Joy", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Offering worship as a sacrifice of praise and thanksgiving." },
+    { title: "Pray Before You Marry", year: "Various", type: "Feature Track", icon: "", platforms: ["Multiple"], description: "Instructional song emphasizing the importance of prayer in relationships." },
+    { title: "Faithful Medley", year: "Various", type: "Medley", icon: "", platforms: ["Multiple"], description: "Compilation of classic hymns and choruses celebrating God's faithfulness." }
+];
+
+let showingAll = false;
+const initialSongsCount = 6;
+
+function renderSongs(showAll = false) {
+    const songsList = document.querySelector('.songs-list');
+    const songsToShow = showAll ? songsDatabase : songsDatabase.slice(0, initialSongsCount);
+    
+    songsList.innerHTML = songsToShow.map(song => `
+        <div class="song-card">
+            <div class="song-header">
+                <div class="song-icon">${song.icon}</div>
+                <div class="song-info">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-year">${song.year}</div>
+                    <span class="song-type">${song.type}</span>
+                </div>
+            </div>
+            <div class="song-details">
+                <p>${song.description}</p>
+                ${song.features ? `<div class="song-features">Featuring: ${song.features}</div>` : ''}
+                ${song.album ? `<div class="song-features">Album: ${song.album}</div>` : ''}
+                <div class="song-platforms">
+                    ${song.platforms.map(platform => `<span class="platform-badge">${platform}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleShowMore() {
+    const btn = document.getElementById('showMoreBtn');
+    showingAll = !showingAll;
+    renderSongs(showingAll);
+    btn.textContent = showingAll ? 'Show Less' : `Show All Songs (${songsDatabase.length} total)`;
+    
+    if (!showingAll) {
+        document.getElementById('music').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Initialize songs display
+renderSongs(false);
+document.getElementById('showMoreBtn').addEventListener('click', toggleShowMore);
+document.getElementById('showMoreBtn').textContent = `Show All Songs (${songsDatabase.length} total)`;
+    </script>
+</body>
+</html>
